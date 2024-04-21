@@ -22,21 +22,26 @@ const Manager = () => {
       ref.current.src = "icons/eye-closed.png";
     }
   };
+
   const DeletePassword = (id) => {
-    let c = confirm("Do you want to delete the password?")
-    if (c == true) {
-    setPasswordArray(passwordArray.filter(item=>item.id!==id));
-    localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form,id: uuidv4()}]));
-    console.log(passwordArray);
+    let c = confirm("Do you want to delete the password?");
+    if (c === true) {
+      setPasswordArray(passwordArray.filter(item => item.id !== id));
+      localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]));
+      console.log(passwordArray);
     }
   };
+
   const EditPassword = (id) => {
-    setForm(passwordArray.filter(i=>i.id==id[0]))
-    setPasswordArray(passwordArray.filter(item=>item.id!==id));
+    const selectedItem = passwordArray.find(item => item.id === id);
+    if (selectedItem) {
+      setForm(selectedItem);
+    }
   };
+
   const SavePassword = () => {
-    setPasswordArray([...passwordArray, {...form,id: uuidv4()}]);
-    localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form,id: uuidv4()}]));
+    setPasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
+    localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]));
     console.log(passwordArray);
     setForm({ site: "", name: "", password: "" });
   };
@@ -51,18 +56,9 @@ const Manager = () => {
   }, []);
 
   const copyText = (text) => {
-    toast('Copied To Clipboard', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        });
     navigator.clipboard.writeText(text);
   };
+
   return (
     <>
       <ToastContainer
@@ -146,8 +142,8 @@ const Manager = () => {
                 </td>
                 <td className="text-center">{item.name}</td>
                 <td className="text-center">{item.password}</td>
-                <span onClick={()=>{DeletePassword(item.id)}}>delete</span>
-                <span onClick={()=>{EditPassword(item.id)}}>Edit</span>
+                <span onClick={() => { DeletePassword(item.id) }}>delete</span>
+                <span onClick={() => { EditPassword(item.id) }}>Edit</span>
               </tr>
             ))}
           </tbody>
@@ -158,3 +154,4 @@ const Manager = () => {
 };
 
 export default Manager;
+
